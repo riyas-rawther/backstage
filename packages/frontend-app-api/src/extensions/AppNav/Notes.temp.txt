@@ -1,0 +1,120 @@
+Item types:
+
+// link
+
+{
+  type?: 'link',
+  to: string | Rouref | ExternalRouteRef,
+  title: string,
+  icon: IconComponent
+}
+
+// modal
+
+{
+  type: 'modal';
+  title: string;
+  icon: IconComponent;
+  modal: (item: { isActive: boolean, deactivate: () => void }) => JSX.Element; 
+}
+
+// switch
+{
+  type: 'switch',
+  title: string | (item: { active: boolean }) => string;
+  icon: IconComponent | (item: { active: boolean }) => IconComponent;
+  switch: (item: { active, deactivate }) => null;
+}
+
+// list
+TBD: shortcuts plugin example
+
+// drawer
+{
+  type: 'drawer';
+  title: string;
+  icon: IconComponent;
+}
+
+// dropdown
+{
+  type: 'dropdown';
+  variant?: 'select';
+  title: string;
+  icon: IconComponent;
+}
+
+// collapse
+
+{
+  type: 'collapse';
+  title: string;
+  icon: IconComponent;
+  collapse?: true;
+}
+
+---
+
+Item Examples:
+
+
+// drawer
+createNavItemExtension({
+  type: 'drawer',
+  icon: CreateComponentIcon,
+  title: 'Create...',
+  attachTo: { id: 'nav-item:search', input: 'items' },
+})
+
+// link
+
+- route ref
+
+createNavItemExtension({
+  name: 'new',
+  to: newComponentRouteRef,
+  icon: NewIcon,
+  title: 'New Component',
+  attachTo: { id: 'nav-item:search', input: 'items' },
+})
+
+- external route ref
+
+createNavItemExtension({
+  name: 'register',
+  to: registerComponentRouteRef,
+  icon: RegisterIcon,
+  title: 'Register Component',
+  attachTo: { id: 'nav-item:search', input: 'items' },
+})
+
+- string
+createNavItemExtension({
+  to: 'https://backstage.io/docs,
+  icon: DocsIcon,
+  title: 'Docs'
+})
+
+// modal
+
+createNavItemExtension({
+  type: 'modal',
+  title: 'Search',
+  icon: SearchIcon,
+  modal: (item: { isActive: boolean, deactivate: () => void }) => <SearchModal open={item.isActive} toggleModal={item.deactivate} />
+})
+
+// switch
+
+createNavItemExtension({
+  type: 'modal',
+  title: (item: { isActive: boolean }) => item.isActive ? UnpinICon : PinIcon,
+  icon: (item: { isActive: boolean }) => item.isActive ? 'Unpin' : 'Pin',
+  switch: function UserSettingsSwitch(item: { isActive: boolean, deactivate: () => void }) {
+    const {toggleSidebarPinState } = useSidebarPinState();
+    useEffect(() => {
+      toggleSidebarPinState();
+    })
+    return null;
+  }
+})
